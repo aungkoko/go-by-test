@@ -1,6 +1,7 @@
 package arraysslices
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -35,4 +36,10 @@ func TestSumAllTails(t *testing.T) {
 
 		checksums(t, expected, got)
 	})
+}
+
+func ExampleSumAllTrails() {
+	result := SumAllTails([]int{1, 2}, []int{2, 3, 4})
+	fmt.Println(result)
+	//Output: [2 7]
 }

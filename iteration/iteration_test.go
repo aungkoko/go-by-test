@@ -29,7 +29,7 @@ func assertCorrectMessage(t testing.TB, got, want string) {
 func ExampleRepeat() {
 	got := Repeat("b", 6)
 	fmt.Println(got)
-	// Outputtt: bbbbbb
+	// Output: bbbbbb
 }
 
 func BenchmarkRepeat(b *testing.B) {
