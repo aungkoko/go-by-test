@@ -1,6 +1,8 @@
 package dictionary
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSearch(t *testing.T) {
 	dictionary := Dictionary{"test": "This is a test"}
@@ -40,21 +42,68 @@ func assertError(t testing.TB, got, want error) {
 }
 
 func TestAdd(t *testing.T) {
-	d := Dictionary{}
-	word := "test"
-	definition := "this is a test"
-	d.Add(word, definition)
-	assertDefinition(t, d, word, definition)
+	t.Run("new word", func(t *testing.T) {
+		d := Dictionary{}
+		word := "test"
+		definition := "this is a test"
+		err := d.Add(word, definition)
+		assertError(t, err, nil)
+		assertDefinition(t, d, word, definition)
+	})
+
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{word: definition}
+		err := dictionary.Add(word, "new test")
+		assertError(t, err, ErrWordExists)
+		assertDefinition(t, dictionary, word, definition)
+	})
 }
 
 func assertDefinition(t testing.TB, dictionary Dictionary, word, definition string) {
 	t.Helper()
-	want := "this is a test"
 	got, err := dictionary.Search("test")
 
 	if err != nil {
 		t.Error("should fine added word:", err)
 	}
 
-	assertString(t, got, want)
+	assertString(t, got, definition)
+}
+
+func TestUpdate(t *testing.T) {
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is a test"
+		dictionary := Dictionary{word: definition}
+		newDefinition := "new definition"
+
+		err := dictionary.Update(word, newDefinition)
+		assertError(t, err, nil)
+
+		assertDefinition(t, dictionary, word, newDefinition)
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		word := "test"
+		definition := "this is a test"
+		dictionary := Dictionary{}
+
+		err := dictionary.Update(word, definition)
+
+		assertError(t, err, ErrWordDoesNotExist)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	word := "test"
+	dictionary := Dictionary{word: "test definition"}
+
+	dictionary.Delete(word)
+
+	_, err := dictionary.Search(word)
+	if err != ErrNotFound {
+		t.Errorf("Expected %q to be deleted", word)
+	}
 }
