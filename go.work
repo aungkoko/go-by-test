@@ -6,6 +6,7 @@ use (
 	./dictionary
 	./integers
 	./iteration
+	./mocking
 	./structs
 	./wallet
 )
