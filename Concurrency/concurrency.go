@@ -6,7 +6,7 @@ type result struct {
 	bool
 }
 
-func CheckWebsite(wc WebsiteChecker, urls []string) map[string]bool {
+func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 	results := make(map[string]bool)
 	resultChannel := make(chan result)
 
@@ -20,6 +20,5 @@ func CheckWebsite(wc WebsiteChecker, urls []string) map[string]bool {
 		r := <-resultChannel
 		results[r.string] = r.bool
 	}
-
 	return results
 }
